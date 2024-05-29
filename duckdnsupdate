@@ -1,0 +1,29 @@
+#!/bin/sh
+
+URL="https://www.duckdns.org/update?domains=${DOMAIN}&token=${TOKEN}"
+
+log() {
+	echo "duckdnsupdate: $1"
+}
+
+if [ -z "$DOMAIN" ]; then
+	log "DOMAIN env not set"
+	exit 1
+fi
+
+if [ -z "$TOKEN" ]; then
+	log "TOKEN env not set"
+	exit 1
+fi
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+ret=$(curl -s "$URL")
+
+if [ "x$?" != "x0" ]; then
+	log "Unable to update IP"
+fi
+
+if [ "$ret" != "OK" ]; then
+	log "No OK in return: $ret"
+fi
